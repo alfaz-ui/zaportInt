@@ -52,6 +52,7 @@ function GradientButton({
       onClick={onClick}
       variant={variant}
       sx={{
+        borderColor: "#7b7b7b",
         backgroundImage: `linear-gradient(150deg, ${defaultGradientStart} 24%, ${defaultGradientEnd} 96%)`,
         boxShadow:
           customBoxShadow || "inset 0 0 0 1px var(--base-color-white--20)",

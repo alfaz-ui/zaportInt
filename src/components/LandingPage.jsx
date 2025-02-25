@@ -6,7 +6,6 @@ import GradientButton from "./common/GradientButton";
 
 function LandingPage() {
   const navigate = useNavigate();
- 
 
   return (
     <Box
@@ -14,7 +13,9 @@ function LandingPage() {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        backgroundImage: "url(header.png)",
+        backgroundImage: "url(header.webp)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
       }}
     >
       <CssBaseline />
