@@ -12,14 +12,20 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ResumeUpload from "./../utils/ResumeUpload";
+import talentService from "./services/talentService";
+import SnackbarUtils from "../utils/SnackbarUtils";
 
 function AddSkills() {
+  const navigate = useNavigate();
   const [skills, setSkills] = useState({
     skill1: "",
     skill2: "",
     skill3: "",
   });
-  const [isSoftwareEngineer, setIsSoftwareEngineer] = useState(true); // Default to true
+  const [resume, setResume] = useState(null); // Store uploaded resume
+  const [technicalCandidate, setTechnicalCandidate] = useState(true); // Default to true
 
   const handleChange = (e) => {
     setSkills({
@@ -29,13 +35,35 @@ function AddSkills() {
   };
 
   const handleRadioChange = (value) => {
-    setIsSoftwareEngineer(value === "true"); // Convert string to boolean
+    setTechnicalCandidate(value === "true"); // Convert string to boolean
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted skills:", skills);
-    console.log("Are you a software engineer?", isSoftwareEngineer);
+  const handleResumeUpload = (file) => {
+    setResume(file);
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    const skillData = Object.values(skills).join(",");
+
+    formData.append("skills", JSON.stringify(skillData));
+
+    formData.append("resume", resume); // Attach file
+    formData.append("technicalCandidate", technicalCandidate);
+
+    try {
+      const response = await talentService.uploadSkills(formData);
+
+      if (response.status === 200) {
+        SnackbarUtils.success("Added successfully!");
+        navigate("/test");
+      } else {
+        SnackbarUtils.error("Sorry, something went wrong.");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      SnackbarUtils.error("Failed to submit resume.");
+    }
   };
 
   return (
@@ -45,11 +73,13 @@ function AddSkills() {
         backgroundColor: "white",
         display: "flex",
         flexDirection: "column",
+        overflow: "auto",
+        height: "100vh",
       }}
     >
       <Box sx={{ width: "100%", height: "auto", p: "20px 20px" }}>
         <img
-          src="/tamcherry-logo.jpg"
+          src="/tamcherry-logo.png"
           alt="Logo of tamcherry"
           style={{ width: 120, height: "auto" }}
         />
@@ -68,6 +98,7 @@ function AddSkills() {
         >
           Tell us your top skills
         </Typography>
+
         <Typography fontSize={".875rem"} mt={2} textAlign={"start"}>
           You're about to take an AI Interview based on the skills and
           experiences displayed in your resume. This will take 42 minutes and
@@ -114,7 +145,7 @@ function AddSkills() {
                 <RadioGroup
                   row
                   name="softwareEngineer"
-                  value={isSoftwareEngineer.toString()}
+                  value={technicalCandidate.toString()}
                   onChange={(e) => handleRadioChange(e.target.value)}
                   sx={{
                     justifyContent: "space-between",
@@ -132,19 +163,18 @@ function AddSkills() {
                       border: "2px solid #c4c4c4",
                       borderRadius: "8px",
                       cursor: "pointer",
-                      borderColor: isSoftwareEngineer ? "blue" : "#c4c4c4",
-                      backgroundColor: isSoftwareEngineer ? "#E3F2FD" : "white",
+                      borderColor: technicalCandidate ? "blue" : "#c4c4c4",
+                      backgroundColor: technicalCandidate ? "#E3F2FD" : "white",
                       transition: "all 0.3s ease-in-out",
                     }}
                   >
                     <FormControlLabel
                       value="true"
-                      control={<Radio />} // Hide actual radio button
+                      control={<Radio />}
                       label="Yes"
                     />
                   </Box>
 
-                  {/* No Option */}
                   <Box
                     component="label"
                     onClick={() => handleRadioChange("false")}
@@ -156,8 +186,8 @@ function AddSkills() {
                       border: "2px solid #c4c4c4",
                       borderRadius: "8px",
                       cursor: "pointer",
-                      borderColor: !isSoftwareEngineer ? "blue" : "#c4c4c4",
-                      backgroundColor: !isSoftwareEngineer
+                      borderColor: !technicalCandidate ? "blue" : "#c4c4c4",
+                      backgroundColor: !technicalCandidate
                         ? "#E3F2FD"
                         : "white",
                       transition: "all 0.3s ease-in-out",
@@ -173,8 +203,14 @@ function AddSkills() {
               </FormControl>
             </Box>
 
+            {/* Resume Upload Component */}
+            <ResumeUpload onUpload={handleResumeUpload} />
+
             <Button
-              type="submit"
+              onClick={
+                () => handleSubmit()
+                // navigate("/test")
+              }
               fullWidth
               variant="contained"
               sx={{

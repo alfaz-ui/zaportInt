@@ -15,17 +15,20 @@ import {
   LogoutOutlined,
   SupervisedUserCircleOutlined,
 } from "@mui/icons-material";
+import authService from "../services/authService";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
 function Sidebar() {
+  const profileDetails = useSelector((state) => state.profile.profileDetails);
+
   const navigate = useNavigate();
 
   const logout = (event) => {
-    localStorage.setItem("login", false);
-
-    navigate("/login");
+    authService.logout();
   };
+
   return (
     <Drawer
       variant="permanent"
@@ -44,7 +47,7 @@ function Sidebar() {
       <Box>
         <Box sx={{ width: "100%", height: "auto", p: "20px 20px" }}>
           <img
-            src="/tamcherry-logo.jpg"
+            src="/tamcherry-logo.png"
             alt="Logo of tamcherry"
             style={{ width: 120, height: "auto" }}
           />
@@ -77,7 +80,14 @@ function Sidebar() {
               <ListItemIcon>
                 <SupervisedUserCircleOutlined />
               </ListItemIcon>
-              <ListItemText style={{ marginLeft: "-20px" }} primary="User" />
+              <ListItemText
+                style={{ marginLeft: "-20px" }}
+                primary={
+                  profileDetails && profileDetails.name
+                    ? profileDetails.name[0]
+                    : "User"
+                }
+              />
             </ListItem>
             <ListItemIcon button onClick={() => logout()}>
               <LogoutOutlined />

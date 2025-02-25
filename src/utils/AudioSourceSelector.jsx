@@ -31,7 +31,7 @@ function AudioSourceSelector() {
   };
 
   return (
-    <FormControl style={{ maxWidth: 392, marginBottom: 10 }}>
+    <FormControl style={{ maxWidth: 392, marginBottom: 10, width: "100%" }}>
       <InputLabel id="audio-source-label">Select Audio Source</InputLabel>
       <Select
         labelId="audio-source-label"

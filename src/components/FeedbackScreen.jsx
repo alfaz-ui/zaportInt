@@ -11,6 +11,9 @@ import Lottie from "react-lottie";
 import animationData from "../assets/success.json";
 import RatingComponent from "../utils/RatingComponent";
 import { CheckCircle } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import talentService from "./services/talentService";
+import SnackbarUtils from "../utils/SnackbarUtils";
 
 const options = {
   animationData: animationData,
@@ -22,29 +25,53 @@ const options = {
 };
 
 function FeedbackScreen() {
+  const navigate = useNavigate();
   const handleRating = (value) => {
-    console.log("User Rating:", value);
+    setRating(value);
   };
 
   const [feedback, setFeedback] = useState("");
+  const [rating, setRating] = useState(3);
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (event) => {
     setFeedback(event.target.value);
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    const data = {
+      rating: rating,
+      feedback: feedback,
+    };
+
+    try {
+      const response = await talentService.feedback(data);
+
+      if (response.status === 200) {
+        SnackbarUtils.success("Done");
+        setSubmitted(true);
+        setTimeout(() => {
+          navigate("/additional"); // Navigate after delay
+        }, 2000);
+      } else {
+        console.log(response);
+        SnackbarUtils.error("Sorry, something went wrong.");
+      }
+    } catch (error) {
+      SnackbarUtils.error("Failed to submit feedback.");
+    }
   };
 
   return (
     <Container
-      maxWidth={true}
+      maxWidth="sm"
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        margin: "0 auto",
+        justifyContent: "center", // Centers vertically
+        minHeight: "100vh", // Ensures it takes the full height of the viewport
+        textAlign: "center",
       }}
     >
       <CssBaseline />

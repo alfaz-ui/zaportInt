@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Box,
   Typography,
@@ -20,6 +18,9 @@ import "@fontsource/poppins";
 import OrSeparator from "./common/OrSeperator";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+const CLIENT_ID =
+  "426835473506-24irep3jal3bbvfj135fh3fbg8irs7k9.apps.googleusercontent.com";
+
 const theme = createTheme({
   typography: {
     fontFamily: "Poppins, Arial, sans-serif",
@@ -34,27 +35,43 @@ function Login() {
   const [isTalentLogin, setIsTalentLogin] = useState(false);
 
   const handleClickShowPassword = () => {
-    setShowPassword((prev) => !prev); // Toggle password visibility
+    setShowPassword((prev) => !prev);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     localStorage.setItem("login", true);
-    navigate("/dashboard");
+    navigate("/skills");
 
     console.log("Email:", email);
     console.log("Password:", password);
   };
 
-  const handleGoogleLogin = () => {
-    // Implement Google login logic here
-    console.log("Google login clicked");
+  const handleGoogleLogin = async () => {
+    try {
+      // Redirect user to backend's Google OAuth endpoint
+      window.location.href = `${process.env.REACT_APP_API_BASE_URL}/auth/google`;
+    } catch (error) {
+      console.error("Google authentication failed:", error);
+    }
   };
 
   const handleTalentLogin = (event) => {
-    event.preventDefault(); // Prevent default link behavior
-    setIsTalentLogin(true); // Update state
+    event.preventDefault();
+    setIsTalentLogin(true);
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+    const refreshToken = urlParams.get("refreshToken");
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem("access_token", accessToken);
+      localStorage.setItem("refresh_token", refreshToken);
+      navigate("/skills"); // Redirect to homepage or dashboard
+    }
+  }, [navigate]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,14 +117,14 @@ function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {isTalentLogin ? null : (
+              {!isTalentLogin && (
                 <>
                   <TextField
                     margin="normal"
                     fullWidth
                     name="password"
                     label="Password"
-                    type={showPassword ? "text" : "password"} // Show password if 'showPassword' is true
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="current-password"
                     value={password}
@@ -116,7 +133,6 @@ function Login() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
                             edge="end"
                           >
@@ -152,13 +168,7 @@ function Login() {
                 Login
               </Button>
               <OrSeparator />
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  mt: 2,
-                }}
-              >
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Button
                   variant="outlined"
                   fullWidth
@@ -205,7 +215,7 @@ function Login() {
             </Box>
           </Box>
         </Card>
-        {isTalentLogin ? null : (
+        {!isTalentLogin && (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
             <Typography variant="body2">Are you a talent?</Typography>
             <Link

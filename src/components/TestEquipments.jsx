@@ -13,9 +13,68 @@ import VideoSourceSelector from "../utils/VideoSourceSelector";
 import AudioSourceSelector from "../utils/AudioSourceSelector";
 import AudioVisualizer from "../utils/AudioVisualizer";
 import CameraFeed from "../utils/CameraFeed";
+import ScreenShare from "../utils/ScreenShare"; // Keep ScreenShare component for handling the logic
+import AppModal from "./../utils/AppModal";
+import { useNavigate } from "react-router-dom";
+import CameraWithObjectDetection from "./CameraWithObjectDetection";
 
 function TestEquipments(props) {
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  let screenStream = null;
+
+  const startScreenShare = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+
+      // Check if the user picked the whole screen
+      const track = stream.getVideoTracks()[0];
+      const settings = track.getSettings();
+
+      if (settings.displaySurface !== "monitor") {
+        setModalOpen(true); // Show warning if not full screen
+        stream.getTracks().forEach((t) => t.stop()); // Stop the stream
+        return;
+      }
+
+      screenStream = stream;
+      setIsSharing(true);
+      setModalOpen(false); // Close modal if screen sharing is correct
+
+      // Handle when the user stops sharing manually
+      track.onended = () => stopScreenShare(true);
+    } catch (error) {
+      console.error("Error sharing screen:", error);
+    }
+  };
+
+  const stopScreenShare = (manualStop = false) => {
+    if (screenStream) {
+      screenStream.getTracks().forEach((track) => track.stop());
+    }
+    setIsSharing(false);
+
+    // If the user manually stops sharing, show the modal again
+    if (manualStop) {
+      setModalOpen(true);
+    }
+  };
+
+  const handleStartInterview = () => {
+    if (isSharing) {
+      // Proceed with starting the interview
+      navigate("/interview");
+      console.log("Interview started.");
+    } else {
+      // Start screen sharing first, then begin the interview
+      startScreenShare();
+    }
+  };
 
   return (
     <Container maxWidth="md" sx={{ backgroundColor: "#e7eaff" }}>
@@ -52,15 +111,15 @@ function TestEquipments(props) {
           <VideoSourceSelector />
           <Box
             sx={{
-              height: "256px", // Fixed height for smaller video recorder
+              height: "265px",
               borderRadius: 3,
               minWidth: 392,
               padding: 0,
-              // position: "relative", // If you want to position it within a larger layout
-              backgroundColor: "#eff1ff", // Optional background color for the video box
+              backgroundColor: "#eff1ff",
             }}
           >
             <CameraFeed />
+            {/* <CameraWithObjectDetection /> */}
           </Box>
         </Box>
 
@@ -73,14 +132,15 @@ function TestEquipments(props) {
           <AudioSourceSelector />
           <Container
             sx={{
-              // height: "256px", // Fixed height for smaller video recorder
               borderRadius: 3,
               display: "flex",
               minWidth: 392,
+              height: "265px",
               flexDirection: "column",
               alignItems: "center",
               pt: 2,
-              backgroundColor: "#eff1ff", // Optional background color for the video box
+              pb: 2,
+              backgroundColor: "#eff1ff",
             }}
           >
             <Typography
@@ -95,38 +155,20 @@ function TestEquipments(props) {
             </Typography>
             <Box
               sx={{
-                backgroundColor: "white",
-                padding: 4,
                 mt: 2,
                 width: "100%",
-                borderRadius: 3,
+
                 display: "flex",
                 alignItems: "center",
                 flexDirection: "column",
               }}
             >
-              <Typography fontWeight={600}>Level Input</Typography>
               <AudioVisualizer />
             </Box>
-
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                borderRadius: 43,
-                fontWeight: 500,
-                padding: ".5rem 1.25rem",
-                fontSize: ".875rem",
-                textTransform: "none",
-              }}
-            >
-              Speak
-            </Button>
           </Container>
         </Box>
       </Box>
+
       <Box
         mt={3}
         display={"flex"}
@@ -152,9 +194,11 @@ function TestEquipments(props) {
             </Typography>
           }
         />
+
+        {/* Share screen and start interview button */}
         <Button
-          disabled={checked ? false : true}
-          loading={false}
+          disabled={!checked}
+          onClick={handleStartInterview} // Start screen sharing and interview
           sx={{
             fontSize: "1.125rem",
             borderRadius: 43,
@@ -164,12 +208,37 @@ function TestEquipments(props) {
             padding: "20px 44px",
             marginTop: "1.4rem",
           }}
-          // loadingPosition="start"
-          // startIcon={<SaveIcon />}
           variant="contained"
         >
           Share screen and start the interview
         </Button>
+
+        {/* Modal for warning */}
+        <AppModal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <Typography mb={1} fontWeight={800} variant="h6">
+            We recommend you to share your entire screen
+          </Typography>
+          <Typography>
+            To ensure an accurate assessment and proctoring score, please share
+            your entire screen. This will help us evaluate your performance more
+            precisely.
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              padding: "1rem 2rem",
+              borderRadius: 25,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
+            onClick={startScreenShare} // Re-share screen when clicked
+          >
+            Re-share screen
+          </Button>
+        </AppModal>
       </Box>
     </Container>
   );

@@ -84,7 +84,7 @@ const AudioVisualizer = () => {
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/wav",
+          type: "audio/webmA",
         });
         setAudioBlob(audioBlob); // Store the recorded audio Blob
       };
@@ -128,50 +128,54 @@ const AudioVisualizer = () => {
   };
 
   return (
-    <Box
-      display="flex"
-      sx={{ width: "100%" }}
-      flexDirection="column"
-      alignItems="center"
-    >
-      {/* Audio Visualizer */}
+    <>
       <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "4px",
-          height: "40px",
-          width: "100%",
-          backgroundColor: "#eee",
-          padding: "5px",
-          borderRadius: "8px",
-          overflow: "hidden",
-        }}
+        display="flex"
+        sx={{ width: "100%", borderRadius: 3 }}
+        flexDirection="column"
+        backgroundColor="white"
+        p={2}
+        alignItems="center"
       >
-        {levels.map((level, index) => (
-          <Box
-            key={index}
-            sx={{
-              height: "100%",
-              width: "8%",
-              backgroundColor: level > 50 ? "#4caf50" : "#ff9800",
-              transition: "height 100ms ease-in-out",
-              borderRadius: "4px",
-              transform: `scaleY(${level / 100})`,
-            }}
-          />
-        ))}
+        <Typography fontWeight={600}>Level Input</Typography>
+        {/* Audio Visualizer */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "4px",
+            height: "40px",
+            width: "100%",
+            backgroundColor: "#eee",
+            padding: "5px",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
+          mt={2}
+        >
+          {levels.map((level, index) => (
+            <Box
+              key={index}
+              sx={{
+                height: "100%",
+                width: "8%",
+                backgroundColor: level > 50 ? "#4caf50" : "#ff9800",
+                transition: "height 100ms ease-in-out",
+                borderRadius: "4px",
+                transform: `scaleY(${level / 100})`,
+              }}
+            />
+          ))}
+        </Box>
+        {/* Warning Message for Low Volume */}
+        {lowVolumeWarning && (
+          <Typography color="error" mt={2} textAlign="center">
+            We are unable to hear your microphone. Please speak louder or check
+            your microphone settings.
+          </Typography>
+        )}
       </Box>
-
-      {/* Warning Message for Low Volume */}
-      {lowVolumeWarning && (
-        <Typography color="error" mt={2} textAlign="center">
-          We are unable to hear your microphone. Please speak louder or check
-          your microphone settings.
-        </Typography>
-      )}
-
       {/* Speak / Pause / Play Button */}
       <Button
         onClick={() => {
@@ -185,8 +189,8 @@ const AudioVisualizer = () => {
         }}
         variant="contained"
         sx={{
-          mt: 3,
-          mb: 2,
+          mt: 1,
+          mb: 1,
           borderRadius: 43,
           fontWeight: 500,
           padding: ".5rem 1.25rem",
@@ -196,7 +200,7 @@ const AudioVisualizer = () => {
       >
         {isRecording ? "Pause" : isPlaying ? "Playing..." : "Speak"}
       </Button>
-    </Box>
+    </>
   );
 };
 

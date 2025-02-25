@@ -1,21 +1,8 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { Box, Button, Divider, Drawer, Typography } from "@mui/material";
 
-function DrawerComponent() {
+function DrawerComponent({ children }) {
   const [drawer, setDrawer] = useState(false);
-  const [anchor, setAnchor] = useState(["top", "left", "right", "bottom"]);
   const [count, setCount] = useState(0);
   return (
     <div>
@@ -31,41 +18,23 @@ function DrawerComponent() {
         Open drawer
       </Button>
       <Drawer
-        anchor={anchor[count]}
+        anchor={"bottom"}
+        sx={{
+          "& .MuiDrawer-paper": {
+            borderRadius: "20px 20px 0 0",
+          },
+        }}
         open={drawer}
         onClose={() => setDrawer(false)}
       >
-        <Box
-          sx={{ width: 250 }}
-          role="presentation"
-          onClick={() => setDrawer(false)}
-        >
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+        <Box fullWidth sx={{ p: 3 }}>
+          {/* Header with underline */}
+          <Typography variant="h4" fontWeight="bold">
+            Information
+          </Typography>
+          <Divider sx={{ mb: 2 }} /> {/* Adds an underline effect */}
         </Box>
+        <Box sx={{ p: 3 }}>{children}</Box>
       </Drawer>
     </div>
   );

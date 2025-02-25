@@ -1,127 +1,78 @@
-import React, { useState } from "react";
-import { Box, Typography, Container } from "@mui/material";
-import { useSpring, animated } from "react-spring"; // For fade animation
+import React, { useState, useEffect } from "react";
+import { Box, Container } from "@mui/material";
 import SpeechToText from "./../utils/SpeechToText";
 import TextToSpeech from "./TextToSpeech";
+import TypingEffect from "../utils/TypingEffect";
+import SkeletonLoader from "../utils/SkeletonLoader";
+import interviewServices from "./services/interviewServices";
+import SnackbarUtils from "../utils/SnackbarUtils";
 
 const InterviewChat = () => {
-  // const [messages, setMessages] = useState([]);
   const [isTranscribing, setIsTranscribing] = useState(false);
-  const [messages, setMessages] = useState([
-    { text: "Hello, welcome to the interview.", sender: "AI" },
-    { text: "Hi", sender: "User" },
-    {
-      text: "How are you doing today? How are you doing today? How are you doing today?",
-      sender: "AI",
-    },
-    { text: "I'm doing good.", sender: "User" },
-    { text: "Hello, welcome to the interview.", sender: "AI" },
-    { text: "Hi", sender: "User" },
-    {
-      text: "How are you doing today? How are you doing today? How are you doing today?",
-      sender: "AI",
-    },
-    { text: "I'm doing good.", sender: "User" },
-    { text: "Hello, welcome to the interview.", sender: "AI" },
-    { text: "Hi", sender: "User" },
-    {
-      text: "How are you doing today? How are you doing today? How are you doing today?",
-      sender: "AI",
-    },
-    { text: "I'm doing good.", sender: "User" },
-    { text: "Hello, welcome to the interview.", sender: "AI" },
-    { text: "Hi", sender: "User" },
-    {
-      text: "How are you doing today? How are you doing today? How are you doing today?",
-      sender: "AI",
-    },
-    { text: "I'm doing good.", sender: "User" },
-  ]);
-  const [scrollY, setScrollY] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [questions, setQuestions] = useState([]);
+  const [question, setQuestion] = useState(
+    "Hello! I am Tamcherry's AI interviewer. Welcome, I'm excited to get to know you. Could you briefly introduce yourself?"
+  );
 
-  // Fade effect for top of the container as it scrolls out of view
-  const fadeEffect = useSpring({
-    opacity: scrollY > 50 ? 0.5 : 1, // Apply fade when scroll is beyond 50px
-    config: { tension: 100, friction: 25 },
-  });
+  const [answers, setAnswers] = useState([]);
 
-  // Track the scroll position
-  const handleScroll = (e) => {
-    setScrollY(e.target.scrollTop);
+  // Function to fetch the next question automatically
+  const fetchNextQuestion = async () => {
+    setIsTranscribing(true); // Show skeleton while fetching
+
+    try {
+      const response = await interviewServices.getQuestion({
+        questions,
+        answers,
+      });
+
+      if (response.status === 200) {
+        const newQuestion =
+          response.data.questions[response.data.questions.length - 1];
+
+        setQuestions((prev) => [...prev, ...response.data.questions]);
+        setQuestion(newQuestion);
+      } else {
+        SnackbarUtils.error("Error fetching question");
+      }
+    } catch (error) {
+      SnackbarUtils.error("Something went wrong");
+    } finally {
+      // Ensure state updates fully before stopping the skeleton
+      setTimeout(() => setIsTranscribing(false), 3000);
+    }
   };
+
+  // Trigger next question when transcription is done (new answer added)
+  useEffect(() => {
+    if (answers.length > 0) {
+      fetchNextQuestion();
+    }
+  }, [answers]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Box
-        sx={{
-          height: 400, // Fixed height for scrollable container
-          overflowY: "auto", // Enable vertical scrolling
-          paddingBottom: 3, // Ensure content is not hidden at the bottom
-          "&::-webkit-scrollbar": {
-            display: "none", // Hide scrollbar
-          },
-        }}
-        onScroll={handleScroll}
-      >
-        {messages.map((message, index) => (
-          <Box sx={{ mb: 3 }} key={index}>
-            <Typography
-              className="font-medium"
-              sx={{
-                fontFamily: "Poppins",
-                fontSize: 10,
-                color: message.sender === "User" ? "#7b7c85" : "#7c83e1",
-              }}
-            >
-              {message.sender === "User" ? "You" : "AI Interviewer"}
-            </Typography>
-            {index < 3 ? ( // Apply fade effect only to the first 3 messages
-              <animated.div style={fadeEffect}>
-                <Typography
-                  sx={{
-                    fontFamily: "Poppins",
-                    fontWeight: 600,
-                    fontSize: 13,
-                    color: message.sender === "User" ? "#7b7c85" : "black",
-                  }}
-                >
-                  {message.text}
-                </Typography>
-              </animated.div>
-            ) : (
-              <Typography
-                sx={{
-                  fontFamily: "Poppins",
-                  fontWeight: 600,
-                  fontSize: 13,
-                  color: message.sender === "User" ? "#7b7c85" : "black",
-                }}
-              >
-                {message.text}
-              </Typography>
-            )}
-          </Box>
-        ))}
-      </Box>
-      <TextToSpeech text={"hello, how are you sss?"} />
-      <SpeechToText
-        setIsTranscribing={setIsTranscribing}
-        setMessages={setMessages}
-      />
-      {isTranscribing ? (
-        <Typography
-          sx={{
-            color: "#7b7c85",
-            fontFamily: "Poppins",
-            fontWeight: 600,
-            fontSize: 13,
-            fontStyle: "italic",
-            mt: 3,
-          }}
-        >
-          Transcribing answer ...
-        </Typography>
-      ) : null}
+      <SkeletonLoader isLoading={isTranscribing} />
+
+      {!isTranscribing && (
+        <Box sx={{ mb: 3 }}>
+          <TypingEffect
+            setLoading={setLoading}
+            text={questions.length > 0 ? questions[questions.length - 1] : ""}
+          />
+        </Box>
+      )}
+
+      {/* SpeechToText (Triggers Next Question Automatically) */}
+      {!loading && (
+        <SpeechToText
+          setIsTranscribing={setIsTranscribing}
+          setAnswers={setAnswers}
+        />
+      )}
+
+      {!isTranscribing && <TextToSpeech text={question ? question : ""} />}
     </Container>
   );
 };
