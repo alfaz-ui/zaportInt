@@ -40,7 +40,6 @@ function AudioSourceSelector() {
         label="Select Audio Source"
         style={{
           backgroundColor: "#eff1ff",
-          fontFamily: "Poppins",
           fontSize: "0.875rem",
         }}
       >

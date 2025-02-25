@@ -21,7 +21,7 @@ const TypingEffect = ({
 
   return (
     <Box>
-      <Typography sx={{ fontFamily: "Poppins", fontSize: 18, fontWeight: 600 }}>
+      <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
         <Typewriter
           key={displayText} // Forces re-render when switching text
           onInit={(typewriter) => {

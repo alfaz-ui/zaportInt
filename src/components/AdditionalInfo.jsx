@@ -4,6 +4,7 @@ import {
   Checkbox,
   Container,
   CssBaseline,
+  Divider,
   FilledInput,
   FormControl,
   FormControlLabel,
@@ -140,12 +141,7 @@ function AdditionalInfo() {
         component="main"
         sx={{ flexGrow: 1, p: 3, maxWidth: 496, margin: "0px auto" }}
       >
-        <Typography
-          fontWeight={600}
-          fontSize={"1.5rem"}
-          fontFamily={"Poppins"}
-          textAlign={"start"}
-        >
+        <Typography fontWeight={600} fontSize={"1.5rem"} textAlign={"start"}>
           Additional Information
         </Typography>
         <Typography fontSize={".875rem"} mt={2} textAlign={"start"}>
@@ -153,11 +149,27 @@ function AdditionalInfo() {
         </Typography>
 
         <Box mt={3} mb={3} component={"form"} onSubmit={handleSubmit}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-            <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mt: 2,
+            }}
+          >
+            <Typography variant="h6" sx={{ mb: 1 }}>
               Select Desired Salary:
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                border: "2px solid #ededed",
+                borderRadius: "10px",
+                padding: "10px",
+              }}
+            >
               {/* Min Salary */}
               <FormControl sx={{ flex: 1 }} variant="filled">
                 <InputLabel htmlFor="filled-adornment-salary-min">
@@ -216,10 +228,12 @@ function AdditionalInfo() {
                 />
               </FormControl>
             </Box>
+
             <FormHelperText id="filled-salary-range-helper-text">
               Enter your expected salary range in rupees
             </FormHelperText>
 
+            <Divider />
             <Typography variant="h6" sx={{ mb: 1 }}>
               Select Work Style:
             </Typography>
@@ -236,8 +250,8 @@ function AdditionalInfo() {
               ))}
             </Box>
             <FormHelperText>Select your preferred work style</FormHelperText>
-
-            <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+            <Divider />
+            <Typography variant="h6" sx={{ mb: 1 }}>
               Select Preferred Job Type:
             </Typography>
             <RadioGroup
@@ -286,8 +300,9 @@ function AdditionalInfo() {
               ))}
             </RadioGroup>
             <FormHelperText>Select your preferred job type.</FormHelperText>
+            <Divider />
 
-            <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
               How soon can you start ?
             </Typography>
             <RadioGroup

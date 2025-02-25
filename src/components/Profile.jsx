@@ -1,17 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import DrawerComponent from "./DrawerComponent";
 import SnackbarUtils from "../utils/SnackbarUtils";
 import talentService from "./services/talentService";
 import ProfileInfo from "./ProfileInfo";
 import { setProfileDetails } from "../redux/profileSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function Profile(props) {
   const dispatch = useDispatch();
-  const profileDetails = useSelector((state) => state.profile.profileDetails);
-
-  const [processing, setProcessing] = useState(false);
-  const [skills, setSkills] = useState("");
 
   const fetchProfileDetails = useCallback(async () => {
     try {

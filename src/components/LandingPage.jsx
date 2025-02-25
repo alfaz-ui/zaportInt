@@ -53,7 +53,6 @@ function LandingPage() {
               <h1
                 style={{
                   fontSize: "4.5rem",
-                  fontFamily: "Outfit,sans-serif",
                   textAlign: "center",
                   margin: 0,
                 }}
@@ -82,7 +81,6 @@ function LandingPage() {
                   // gradientStart="#ff7e5f"
                   // gradientEnd="#feb47b"
                   buttonColor="#fff3"
-                  fontFamily="'Outfit', sans-serif"
                   fontSize="1.5rem"
                   padding="1rem 2rem"
                 >
@@ -95,7 +93,6 @@ function LandingPage() {
                   // gradientStart="#ff7e5f"
                   // gradientEnd="#feb47b"
                   buttonColor="#fff3"
-                  fontFamily="'Outfit', sans-serif"
                   fontSize="1.5rem"
                   padding="1rem 2rem"
                 >

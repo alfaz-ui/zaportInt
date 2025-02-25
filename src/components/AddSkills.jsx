@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import ResumeUpload from "./../utils/ResumeUpload";
 import talentService from "./services/talentService";
 import SnackbarUtils from "../utils/SnackbarUtils";
+import GradientButton from "./common/GradientButton";
 
 function AddSkills() {
   const navigate = useNavigate();
@@ -90,12 +91,7 @@ function AddSkills() {
         component="main"
         sx={{ flexGrow: 1, p: 3, maxWidth: 496, margin: "0px auto" }}
       >
-        <Typography
-          fontWeight={600}
-          fontSize={"1.5rem"}
-          fontFamily={"Poppins"}
-          textAlign={"start"}
-        >
+        <Typography fontWeight={600} fontSize={"1.5rem"} textAlign={"start"}>
           Tell us your top skills
         </Typography>
 

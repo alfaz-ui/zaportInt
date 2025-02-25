@@ -69,7 +69,6 @@ const NavWrapper = () => {
               // gradientEnd="#feb47b"
               buttonColor="white"
               borderRadius=".5rem"
-              fontFamily="'Outfit', sans-serif"
               onClick={() => {
                 navigate("/login");
               }}
@@ -84,7 +83,6 @@ const NavWrapper = () => {
               borderRadius=".5rem"
               gradientEnd="#212d99"
               buttonColor="white"
-              fontFamily="'Outfit', sans-serif"
             >
               Book a demo
             </GradientButton>

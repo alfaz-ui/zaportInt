@@ -52,7 +52,6 @@ function VideoSourceSelector({ onVideoSourceChange }) {
         label="Select Video Source"
         style={{
           backgroundColor: "#eff1ff",
-          fontFamily: "Poppins",
           fontSize: "0.875rem",
         }}
       >

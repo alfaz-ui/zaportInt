@@ -26,7 +26,7 @@ const RatingComponent = ({ initialRating = 0, onChange }) => {
         onChange={handleRatingChange}
       />
 
-      <Typography fontWeight={700} textAlign={"center"} fontFamily={"Poppins"}>
+      <Typography fontWeight={700} textAlign={"center"}>
         Your Rating: {rating}
       </Typography>
     </Box>

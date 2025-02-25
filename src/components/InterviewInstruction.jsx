@@ -4,7 +4,7 @@ import React from "react";
 function InterviewInstruction(props) {
   return (
     <>
-      <Typography fontWeight={700} textAlign={"center"} fontFamily={"Poppins"}>
+      <Typography fontWeight={700} textAlign={"center"}>
         Please note that this <span>~17 minute</span> interview will be with an
         AI interviewer. You will answer each question by speaking out loud, so
         find a quiet spot and make sure your internet connection is stable. Once

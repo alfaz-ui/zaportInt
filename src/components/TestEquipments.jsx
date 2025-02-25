@@ -81,20 +81,11 @@ function TestEquipments(props) {
       <CssBaseline />
 
       <Box component="main" marginTop={5} sx={{ flexGrow: 1, p: 3 }}>
-        <Typography
-          fontWeight={700}
-          textAlign={"center"}
-          fontFamily={"Poppins"}
-          variant="h5"
-        >
+        <Typography fontWeight={700} textAlign={"center"} variant="h5">
           Check camera, mic and share screen
         </Typography>
 
-        <Typography
-          style={{ marginTop: 8 }}
-          textAlign={"center"}
-          fontFamily={"Poppins"}
-        >
+        <Typography style={{ marginTop: 8 }} textAlign={"center"}>
           We use audio, video and screen sharing to generate an accurate
           assessment & proctoring score. Please note that the recording of
           screen will be included in the AI interview report.
@@ -203,7 +194,6 @@ function TestEquipments(props) {
             fontSize: "1.125rem",
             borderRadius: 43,
             textTransform: "none",
-            fontFamily: "Poppins",
             fontWeight: "500",
             padding: "20px 44px",
             marginTop: "1.4rem",

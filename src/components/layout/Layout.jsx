@@ -20,7 +20,7 @@ function Layout({ children }) {
       <CssBaseline />
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Typography fontFamily={"Poppins"} fontWeight={600} variant="h4">
+        <Typography fontWeight={600} variant="h4">
           {heading}
         </Typography>
         <Toolbar />

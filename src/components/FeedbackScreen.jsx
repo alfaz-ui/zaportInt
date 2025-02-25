@@ -89,12 +89,7 @@ function FeedbackScreen() {
       >
         <Lottie options={options} />
       </Box>
-      <Typography
-        fontWeight={700}
-        textAlign={"center"}
-        fontFamily={"Poppins"}
-        variant="h5"
-      >
+      <Typography fontWeight={700} textAlign={"center"} variant="h5">
         How was your overall experience with our AI interview ?
       </Typography>
       {submitted ? (
@@ -112,23 +107,23 @@ function FeedbackScreen() {
             }}
           >
             <CheckCircle sx={{ color: "#36ba3c", mr: 1 }} />
-            <Typography
-              fontWeight={400}
-              textAlign={"center"}
-              fontFamily={"Poppins"}
-              fontSize={10}
-            >
+            <Typography fontWeight={400} textAlign={"center"} fontSize={10}>
               Thank you! Your feedback has been successfully submitted.
             </Typography>
           </Box>
         </>
       ) : (
         <>
-          <RatingComponent initialRating={3} onChange={handleRating} />
+          <RatingComponent initialRating={0} onChange={handleRating} />
           <TextField
             multiline
             label="Feedback"
-            sx={{ mt: 3, mb: 2, backgroundColor: "white", width: 300 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              width: 300,
+              backgroundColor: "#e2e5ff",
+            }}
             minRows={4}
             value={feedback}
             onChange={handleChange}

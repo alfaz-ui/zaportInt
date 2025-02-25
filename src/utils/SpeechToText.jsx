@@ -66,7 +66,6 @@ const SpeechToText = ({ setAnswers, setIsTranscribing }) => {
           mt: 3,
           borderRadius: 43,
           textTransform: "none",
-          fontFamily: "Poppins",
           fontWeight: "500",
           backgroundColor: "white",
           color: "black",
@@ -96,7 +95,6 @@ const SpeechToText = ({ setAnswers, setIsTranscribing }) => {
           mt: 3,
           borderRadius: 43,
           textTransform: "none",
-          fontFamily: "Poppins",
           fontWeight: "500",
         }}
         onClick={() => navigate("/feedback")}
